@@ -15,18 +15,91 @@ export default function App() {
 
   useEffect(() => {
     // TODO (Part 1): fetch `${API_URL}/api/recipes`, convert the response to JSON, and setRecipes with it
+    fetch(`${API_URL}/api/recipes`)
+    .then(response => response.json())
+    .then(data => {
+      setRecipes(data)
+    })
   }, [])
 
   function handleAddRecipe(newRecipe) {
     // TODO (Part 2): POST newRecipe to `${API_URL}/api/recipes`, then add the created recipe to `recipes`
+    fetch(`${API_URL}/api/recipes`,{
+    method: "POST",
+    headers : 
+      {"Content-Type": "application/json"},
+    body: JSON.stringify(newRecipe)})
+    .then(response => response.json())
+    .then(data => {
+    setRecipes((currentRecipe) => [...currentRecipe, data])
+    })
   }
 
   function handleDeleteRecipe(id) {
     // TODO (Part 3): DELETE `${API_URL}/api/recipes/${id}`, then remove that recipe from `recipes`
+
+     //class note:
+  const options = {
+    method: 'DELETE'
   }
+
+  fetch(API_URL + '/api/recipes' + id, options)
+  .then(response => {
+    // return response.text()
+  })
+  .then((data) => {
+    //console.log(data)
+    const filterRecipes = recipes.filter( rec => rec.id !== id)
+    setRecipes(filterRecipes)
+  }) 
+
+  // end of the note
+
+  //below it is wrong way.
+    // fetch(`${API_URL}/api/recipes/${id}`,{
+    // method: "DELETE",})
+    // .then(response => response.json())
+    
+    // //added new, need to change the last part.
+    // // .then(deleteRecipe => {
+    // //   setRecipes((recipes.fliter((recipe)),recipe.id !== id))
+    // // end added
+
+    // .then(deleteRecipe => {
+    //   setRecipes((deleteRecipe) => [...deleteRecipe ])
+    // })
+    // console.log(deleteRecipe)  
+  }
+
+
+ 
 
   function handleToggleVegetarian(id) {
     // TODO (Stretch): PATCH `${API_URL}/api/recipes/${id}` to flip `vegetarian`, then update `recipes`
+
+    //class note:
+    const option = {
+      method: 'PATCH',
+      header: {
+        'Content-Type:': "application/Json"
+      },
+      body: JSON.stringify({
+      })
+    }
+
+    fetch(API_URL + '/api/recipes/' + id, option)
+    .then(response => response.json)
+    .then(data =>{
+      console.log(data)
+      const modifyRecArr = recipes.map(rec => {
+        if(rec.id === id){
+          return ([...data])
+        }
+      })
+    })
+    // end of the note but not finished , also need to modifd the recipes.js file 
+    //located in the router.patch
+    
   }
 
   return (
